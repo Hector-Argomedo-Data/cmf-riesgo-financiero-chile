@@ -1,5 +1,5 @@
 Markdown
-# 📓 Data Journal (P.D.A.R.) - Proyecto CMF Risk
+# 📓 Data Journal - Proyecto CMF Risk
 
 ## [Fase 1: Preparación y Limpieza en Google Sheets / Excel]
 
@@ -13,10 +13,18 @@ Markdown
 
 ## [Fase 2: Automatización y Conversión con Python]
 
-### 2. Conversión Masiva de Excel a CSV
+### 1. Conversión Masiva de Excel a CSV
 - **[P] Problema:** Convertir a mano 48 archivos Excel a formato CSV UTF-8 consumiría demasiado tiempo y tenía riesgo de error humano.
 - **[D] Decisión:** Crear un script automatizado en Python (Google Colab) con la librería `pandas`.
 - **[A] Acción:** Ejecución del script de barrido de directorios y exportación limpia:
   ```python
   df.to_csv(ruta_salida, index=False, encoding='utf-8')
+- **[R] Resultado: Reducción del tiempo de preparación de datos de horas manuales a solo 8 segundos. Generación de 48 archivos .csv con 100% de compatibilidad para BigQuery (UTF-8, snake_case, sin nulos/acentos y números enteros limpios).
+
+### 2. Normalización Masiva de Archivos (Python & Pandas)
+- **[P] Problema: Los 48 archivos Excel presentaban imprecisiones en tipos de datos flotantes (decimales excesivos producto del procesamiento), nombres de columnas inconsistentes con caracteres especiales/acentos que romperían la sintaxis SQL de BigQuery, y una estructura manual ineficiente.
+
+- **[D] Decisión: Automatizar el data wrangling mediante un script de Python en Google Colab utilizando pandas, glob (búsqueda recursiva) y unicodedata para limpiar y estandarizar la totalidad de los archivos de forma masiva antes de la ingesta.
+
+- **[A] Acción: Ejecución de pipeline con normalización de esquema snake_case, redondeo de floats a enteros y preservación de jerarquía de subcarpetas:
 - **[R] Resultado: Reducción del tiempo de preparación de datos de horas manuales a solo 8 segundos. Generación de 48 archivos .csv con 100% de compatibilidad para BigQuery (UTF-8, snake_case, sin nulos/acentos y números enteros limpios).
