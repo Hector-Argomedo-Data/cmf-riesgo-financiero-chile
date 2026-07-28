@@ -17,5 +17,18 @@
 - **[D] Decisión:** Construir un script automatizado en Python (Google Colab) utilizando `pandas` y `glob` (para barrido recursivo de carpetas) que convierta los archivos a `.csv` e imponga un redondeo entero a los valores numéricos.
 - **[A] Acción:** Ejecución del pipeline de lectura recursiva de directorios, aplicación de `round(0)` en columnas flotantes y exportación en codificación `UTF-8`:
 
-  ```python
-      df.to_csv(ruta_salida, index=False, encoding='utf-8')
+```python
+  import glob
+  import os
+  import pandas as pd
+
+  # Barrido recursivo y conversión con redondeo de precisión
+  for ruta_archivo in glob.glob(
+      os.path.join(carpeta_origen, "**/*.csv"), recursive=True
+  ):
+    df = pd.read_csv(ruta_archivo)
+
+    for col in df.select_dtypes(include=["float64", "float32"]).columns:
+      df[col] = df[col].round(0)
+
+    df.to_csv(ruta_salida, index=False, encoding="utf-8")
