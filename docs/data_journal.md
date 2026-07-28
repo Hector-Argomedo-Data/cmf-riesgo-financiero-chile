@@ -11,24 +11,13 @@ Markdown
 
 ---
 
-## [Fase 2: Automatización y Conversión con Python]
+[Fase 2: Pipeline de Automatización y Normalización con Python]
 
-### 1. Conversión Masiva de Excel a CSV
-- **[P] Problema:** Convertir a mano 48 archivos Excel a formato CSV UTF-8 consumiría demasiado tiempo y tenía riesgo de error humano.
-- **[D] Decisión:** Crear un script automatizado en Python (Google Colab) con la librería `pandas`.
-- **[A] Acción:** Ejecución del script de barrido de directorios y exportación limpia:
+1. Pipeline de Ingesta, Normalización de Esquema y Precisión Numérica (Python & Pandas)
+
+- [P] Problema: Convertir a mano los 48 reportes extraídos a CSV consumiría horas. Además, la presencia de caracteres especiales/acentos en los encabezados rompería el esquema en BigQuery, y la imprecisión de los tipos flotantes genera decimales excesivos en cifras financieras.
+- [D] Decisión: Diseñar un script automatizado en Python (Google Colab) utilizando `pandas`, `glob` (para barrido recursivo de carpetas) y `unicodedata` para realizar la conversión, normalización de esquema y ajuste numérico en una sola ejecución masiva.
+- [A] Acción: Implementación de un pipeline integral que lee la estructura de directorios, limpia nombres de columna a formato estricto `snake_case`, redondea flotantes a enteros (`INT64`) y exporta a formato `.csv` limpio:
+
   ```python
-  df.to_csv(ruta_salida, index=False, encoding='utf-8')
-- **[R] Resultado: Reducción del tiempo de preparación de datos de horas manuales a solo 8 segundos. Generación de 48 archivos .csv con 100% de compatibilidad para BigQuery (UTF-8, snake_case, sin nulos/acentos y números enteros limpios).
-
-### 2. Normalización Masiva de Archivos (Python & Pandas)
-- **[P] Problema: Los 48 archivos Excel presentaban imprecisiones en tipos de datos flotantes (decimales excesivos producto del procesamiento), nombres de columnas inconsistentes con caracteres especiales/acentos que romperían la sintaxis SQL de BigQuery, y una estructura manual ineficiente.
-
-- **[D] Decisión: Automatizar el data wrangling mediante un script de Python en Google Colab utilizando pandas, glob (búsqueda recursiva) y unicodedata para limpiar y estandarizar la totalidad de los archivos de forma masiva antes de la ingesta.
-
-- **[A] Acción: Ejecución de pipeline con normalización de esquema snake_case, redondeo de floats a enteros y preservación de jerarquía de subcarpetas:
-- **[R] Resultado: Reducción del tiempo de preparación de datos de horas manuales a solo 8 segundos. Generación de 48 archivos .csv con 100% de compatibilidad para BigQuery (UTF-8, snake_case, sin nulos/acentos y números enteros limpios).
-  ```python
-  df.columns = [limpiar_texto(col) for col in df.columns]
-  for col in df.select_dtypes(include=["float64", "float32"]).columns:
-    df[col] = df[col].round(0)
+      df.to_csv(ruta_salida, index=False, encoding='utf-8')
