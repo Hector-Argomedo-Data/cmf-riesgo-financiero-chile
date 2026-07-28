@@ -28,3 +28,5 @@ Markdown
 
 - **[A] Acción: Ejecución de pipeline con normalización de esquema snake_case, redondeo de floats a enteros y preservación de jerarquía de subcarpetas:
 - **[R] Resultado: Reducción del tiempo de preparación de datos de horas manuales a solo 8 segundos. Generación de 48 archivos .csv con 100% de compatibilidad para BigQuery (UTF-8, snake_case, sin nulos/acentos y números enteros limpios).
+
+  df.to_csv(ruta_salida, index=False, encoding="utf-8")
