@@ -19,3 +19,4 @@ Markdown
 - **[A] Acción:** Ejecución del script de barrido de directorios y exportación limpia:
   ```python
   df.to_csv(ruta_salida, index=False, encoding='utf-8')
+- **[R] Resultado: Reducción del tiempo de preparación de datos de horas manuales a solo 8 segundos. Generación de 48 archivos .csv con 100% de compatibilidad para BigQuery (UTF-8, snake_case, sin nulos/acentos y números enteros limpios).
