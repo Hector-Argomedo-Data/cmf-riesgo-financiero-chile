@@ -1,4 +1,4 @@
-# 🏦 Repositorio Técnico: Pipeline ETL y Análisis de Riesgo CMF
+# 🏦 CMF Banking Risk: Credit Risk & Non-Performing Loans Analytics
 
 Este repositorio contiene el código fuente, scripts de automatización y bitácora técnica del proyecto de **Análisis de Riesgo Financiero (CMF Chile)**.
 
