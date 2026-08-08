@@ -1,40 +1,29 @@
-import glob
 import os
 import pandas as pd
+from google.colab import drive
+drive.mount('/content/drive')
+ruta_proyecto = '/content/drive/MyDrive/Caso de estudio 1 Morosidad bancos/Hojas de calculos/Meses listos'
+ruta_destino_csv = os.path.join(ruta_proyecto, 'CSV')
 
-# Rutas en Google Drive
-carpeta_origen = "/content/drive/MyDrive/Caso de estudio 1 Morosidad bancos/CSV"
-carpeta_destino = (
-    "/content/drive/MyDrive/Caso de estudio 1 Morosidad bancos/CSV_limpios"
-)
-
-os.makedirs(carpeta_destino, exist_ok=True)
-
-# Buscar recursivamente en TODAS las subcarpetas de CSV
-archivos = glob.glob(os.path.join(carpeta_origen, "**/*.csv"), recursive=True)
-
-print(f"🚀 Iniciando procesamiento masivo de {len(archivos)} archivos...\n")
-
-for ruta_archivo in archivos:
-  # Mantener la estructura de subcarpetas al guardar
-  ruta_relativa = os.path.relpath(ruta_archivo, carpeta_origen)
-  ruta_salida = os.path.join(carpeta_destino, ruta_relativa)
-
-  # Crear la subcarpeta de destino si no existe
-  os.makedirs(os.path.dirname(ruta_salida), exist_ok=True)
-
-  # Cargar el CSV
-  df = pd.read_csv(ruta_archivo)
-
-  # A) Limpiar datos: Redondear columnas numéricas (floats) a enteros
-  for col in df.select_dtypes(include=["float64", "float32"]).columns:
-    df[col] = df[col].round(0)  # Redondea a 0 decimales
-
-  # B) Guardar el nuevo CSV limpio en Drive
-  df.to_csv(ruta_salida, index=False, encoding="utf-8")
-
-  print(f"✅ Procesado: {ruta_relativa}")
-
-print(
-    "\n🎉 Proceso finalizado con éxito. Archivos redondeados y listos para"
-    " ingesta."
+if not os.path.exists(ruta_destino_csv):
+    os.makedirs(ruta_destino_csv)
+    print(f"Carpeta creada: {ruta_destino_csv}")
+archivos_procesados = 0
+for raíz, directorios, archivos in os.walk(ruta_proyecto):
+    if 'CSV' in raíz or 'original' in raíz.lower():
+        continue
+    for archivo in archivos:
+        if archivo.endswith('.xlsx') or archivo.endswith('.xls'):
+            ruta_excel = os.path.join(raíz, archivo)
+            try:
+                xls = pd.ExcelFile(ruta_excel)
+                for nombre_hoja in xls.sheet_names:
+                    df = pd.read_excel(xls, sheet_name=nombre_hoja)
+                    nombre_csv = f"{nombre_hoja}.csv" if len(xls.sheet_names) > 1 else f"{os.path.splitext(archivo)[0]}.csv"
+                    ruta_salida = os.path.join(ruta_destino_csv, nombre_csv)
+                    df.to_csv(ruta_salida, index=False, encoding='utf-8')
+                    print(f"✅ Convertido: {nombre_csv}")
+                    archivos_procesados += 1
+            except Exception as e:
+                print(f"❌ No funciona {archivo}: {e}")
+print(f"\n Completado bien /CSV: {archivos_procesados}")
