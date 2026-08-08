@@ -35,7 +35,15 @@
 ```
 - **[R] Resultado:** 24 archivos CSV limpios para ser Cargados en Bigquery para su consolidacion
 
+## [Fase: 03 — Consolidación Histórica e Ingesta en BigQuery (SQL)]
 
+- **[P] Problema:** Fragmentación de la información en 24 archivos independientes (12 de colocaciones y 12 de activos), lo que impedía ejecutar consultas analíticas transversales y saturaba el procesamiento local.
+
+- **[D] Decisión:** Centralizar el almacenamiento en Google BigQuery para aprovechar un entorno de Data Warehouse escalable y utilizar SQL (UNION ALL y sentencias DDL) para unificar los reportes mensuales en dos grandes tablas históricas (colocaciones_historico y activos_historico).
+
+- **[A] Acción:** Creación del dataset en BigQuery, carga de los archivos CSV preprocesados, ejecución de scripts SQL para la unión de tablas y la correcta definición de esquemas mediante casteo explícito de datos (CAST a FLOAT64 e INT64 y parseo de fechas).
+
+- **[R] Resultado:** Dos tablas históricas consolidadas y optimizadas en la nube, con trazabilidad completa de los 12 meses analizados, listas para ser consumidas directamente por Power BI reduciendo el tiempo de respuesta de las consultas a milisegundos.
 
 ## [Fase: 04 — Diseños de Dashboard y UI Ejecutiva en Power BI]
 
