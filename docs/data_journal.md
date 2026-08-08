@@ -32,3 +32,21 @@
       df[col] = df[col].round(0)
 
     df.to_csv(ruta_salida, index=False, encoding="utf-8")
+```
+- **[R] Resultado:** 24 archivos CSV limpios para ser Cargados en Bigquery para su consolidacion
+
+
+
+## [Fase: 04 — Diseños de Dashboard y UI Ejecutiva en Power BI]
+
+- **[P] Problema:**  Riesgo de caer en la "Ceguera de Escala" al comparar instituciones con volúmenes de activos muy dispares, sumado a la imposibilidad de filtrar simultáneamente dos tablas de hechos independientes (colocaciones_historico y activos_historico).
+
+- **[D] Decisión:** Adoptar una arquitectura de modelo en estrella (Star Schema) mediante una tabla puente de dimensión (Dim_Banco) y diseñar una interfaz en cuadrícula (Grid Layout) que combine métricas de volumen absoluto con ratios relativos.
+
+- **[A] Acción:** Construcción de la tabla dimensional Dim_Banco mediante DAX con relaciones 1:* hacia ambas tablas de hechos, desarrollo de títulos dinámicos condicionales (Titulo_Ficha_Ejecutiva) y maquetación de tarjetas KPI y gráficos bajo el patrón visual en "F".
+
+- **[R] Resultado:** Un dashboard ejecutivo e interactivo que permite alternar fluidamente entre el resumen global del sistema y la ficha individual por banco, sincronizando filtros en tiempo real y revelando el volumen en dinero real en riesgo junto a los porcentajes de morosidad y cobertura.
+
+Aprendizaje Clave: Un porcentaje bajo de morosidad en un banco gigante representa un volumen de dinero en riesgo significativamente mayor que un porcentaje alto en una entidad pequeña. El volumen absoluto en dinero siempre debe acompañar al ratio relativo porcentual.
+
+
